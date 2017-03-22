@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "identification.h"
 #include <QLayout>
 #include <QHBoxLayout>
 #include <QPushButton>
@@ -26,6 +27,7 @@ QWidget *MainWindow::createLayout(){
     QHBoxLayout *bottomLayout = new QHBoxLayout();
     QPushButton *identification = new QPushButton();
     QPushButton *verification = new QPushButton();
+    QObject::connect(identification,SIGNAL(clicked()),this,SLOT(on_pushButton_Verifiaction_clicked()));
     QPushButton *manual = new QPushButton();
     QPushButton *help = new QPushButton();
     identification->setText("Identification");
@@ -45,4 +47,10 @@ QWidget *MainWindow::createLayout(){
     vertLayout->addLayout(bottomLayout);
     layout->setLayout(vertLayout);
     return layout;
+}
+
+void MainWindow::on_pushButton_Verifiaction_clicked()
+{
+    this->identification = new Identification();
+    this->identification->show();
 }

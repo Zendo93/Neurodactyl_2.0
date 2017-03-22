@@ -4,7 +4,7 @@
 #include <QMainWindow>
 #include <QWidget>
 #include "identification.h"
-
+#include "verification.h"
 namespace Ui {
 class MainWindow;
 }
@@ -19,11 +19,13 @@ public:
 
 private slots:
     void on_pushButton_Verifiaction_clicked();
+    void on_pushButton_Identification_clicked();
 
 private:
     Ui::MainWindow *ui;
     QWidget *createLayout();
     Identification *identification;
+    Verification *verification;
 
 };
 

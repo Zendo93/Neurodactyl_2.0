@@ -27,7 +27,8 @@ QWidget *MainWindow::createLayout(){
     QHBoxLayout *bottomLayout = new QHBoxLayout();
     QPushButton *identification = new QPushButton();
     QPushButton *verification = new QPushButton();
-    QObject::connect(identification,SIGNAL(clicked()),this,SLOT(on_pushButton_Verifiaction_clicked()));
+    QObject::connect(identification,SIGNAL(clicked()),this,SLOT(on_pushButton_Identification_clicked()));
+    QObject::connect(verification,SIGNAL(clicked()),this,SLOT(on_pushButton_Verifiaction_clicked()));
     QPushButton *manual = new QPushButton();
     QPushButton *help = new QPushButton();
     identification->setText("Identification");
@@ -49,8 +50,15 @@ QWidget *MainWindow::createLayout(){
     return layout;
 }
 
-void MainWindow::on_pushButton_Verifiaction_clicked()
+void MainWindow::on_pushButton_Identification_clicked()
 {
     this->identification = new Identification();
     this->identification->show();
 }
+
+void MainWindow::on_pushButton_Verifiaction_clicked()
+{
+    this->verification = new Verification();
+    this->verification->show();
+}
+

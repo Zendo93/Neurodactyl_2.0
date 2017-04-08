@@ -27,10 +27,13 @@ QWidget *MainWindow::createLayout(){
     QHBoxLayout *bottomLayout = new QHBoxLayout();
     QPushButton *identification = new QPushButton();
     QPushButton *verification = new QPushButton();
-    QObject::connect(identification,SIGNAL(clicked()),this,SLOT(on_pushButton_Identification_clicked()));
-    QObject::connect(verification,SIGNAL(clicked()),this,SLOT(on_pushButton_Verifiaction_clicked()));
     QPushButton *manual = new QPushButton();
     QPushButton *help = new QPushButton();
+
+    QObject::connect(identification,SIGNAL(clicked()),this,SLOT(on_pushButton_Identification_clicked()));
+    QObject::connect(verification,SIGNAL(clicked()),this,SLOT(on_pushButton_Verifiaction_clicked()));
+    QObject::connect(manual,SIGNAL(clicked()),this,SLOT(on_pushButton_Manual_clicked()));
+
     identification->setText("Identification");
     verification->setText("Verification");
     manual->setText("Manual");
@@ -62,3 +65,8 @@ void MainWindow::on_pushButton_Verifiaction_clicked()
     this->verification->show();
 }
 
+void MainWindow::on_pushButton_Manual_clicked()
+{
+    this->manual = new Manual();
+    this->manual->show();
+}

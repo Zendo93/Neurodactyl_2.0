@@ -26,12 +26,18 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += main.cpp\
         mainwindow.cpp \
     identification.cpp \
-    verification.cpp
+    verification.cpp \
+    manual.cpp
 
 HEADERS  += mainwindow.h \
     identification.h \
-    verification.h
+    verification.h \
+    manual.h
 
 FORMS    += mainwindow.ui \
     identification.ui \
-    verification.ui
+    verification.ui \
+    manual.ui
+
+DISTFILES += \
+    icons/folder_chooser.ico

@@ -27,12 +27,20 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     identification.cpp \
     verification.cpp \
-    manual.cpp
+    manual.cpp \
+    FingerPrintScanner/fingerprintscanner.cpp
 
 HEADERS  += mainwindow.h \
     identification.h \
     verification.h \
-    manual.h
+    manual.h \
+    FingerPrintScanner/fingerprintscanner.h \
+    FingerPrintScanner/fxISO_device.h \
+    FingerPrintScanner/fxISO_engine.h \
+    FingerPrintScanner/fxISO_Interchange.h \
+    FingerPrintScanner/fxISOAFIS.h \
+    FingerPrintScanner/fxISOdll.h \
+    FingerPrintScanner/fxISOenrdlg.h
 
 FORMS    += mainwindow.ui \
     identification.ui \
@@ -41,3 +49,9 @@ FORMS    += mainwindow.ui \
 
 DISTFILES += \
     icons/folder_chooser.ico
+
+LIBS += "C:/TeamProject/Neurodactyl_2/FingerPrintScanner/lib/x64/fxISO_64.lib"
+LIBS += "C:/TeamProject/Neurodactyl_2/FingerPrintScanner/lib/x64/fxISOenrdlg_64.lib"
+LIBS += "C:/TeamProject/Neurodactyl_2/FingerPrintScanner/lib/x64/FingerPrintScannerDLL.lib"
+
+win32-msvc*: QMAKE_LFLAGS += /DYNAMICBASE:NO

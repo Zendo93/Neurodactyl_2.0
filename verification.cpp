@@ -27,29 +27,6 @@ Verification::Verification(QWidget *parent) :
             this,SLOT(switchDevice1(const QString&)));
     connect(ui->comboBox,SIGNAL(activated(const QString&)),
             this,SLOT(switchDevice2(const QString&)));
-
-    if (isSenzorSelected(ui->comboBox))
-    {
-        image1 = executeTheScanner(scanner);
-        drawTheImageFromTheScanner(image1,ui->graphicsView,scene1);
-    }
-    else
-    {
-        QString imageFile = readImageFromComputer();
-        ui->graphicsView->setScene(scene1);
-    }
-
-    if (isSenzorSelected(ui->comboBox_2))
-    {
-        image2 = executeTheScanner(scanner);
-        drawTheImageFromTheScanner(image2,ui->graphicsView_2,scene2);
-    }
-    else
-    {
-        QString imageFile = readImageFromComputer();
-        ui->graphicsView_2->setScene(scene2);
-    }
-    //layout->addWidget(checkBox3,2,0,2,2,Qt::AlignTop);
 }
 
 Verification::~Verification()
@@ -96,9 +73,8 @@ void Verification::drawTheImageFromTheScanner(unsigned char *image,QGraphicsView
 void Verification::switchDevice1(QString name){
     if (name == "Senzor")
     {
-        unsigned char *buffer;
-        buffer = executeTheScanner(scanner);
-        drawTheImageFromTheScanner(buffer,ui->graphicsView_2,scene2);
+        image1 = executeTheScanner(scanner);
+        drawTheImageFromTheScanner(image1,ui->graphicsView_2,scene2);
     }
     else
     {
@@ -111,9 +87,8 @@ void Verification::switchDevice1(QString name){
 void Verification::switchDevice2(QString name){
     if (name == "Senzor")
     {
-        unsigned char *buffer;
-        buffer = executeTheScanner(scanner);
-        drawTheImageFromTheScanner(buffer,ui->graphicsView,scene1);
+        image2 = executeTheScanner(scanner);
+        drawTheImageFromTheScanner(image2,ui->graphicsView,scene1);
     }
     else
     {

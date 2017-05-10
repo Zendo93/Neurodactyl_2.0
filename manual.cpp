@@ -17,35 +17,28 @@ Manual::Manual(QWidget *parent) :
     createListForExtractionLevel1();
     createListForTrainingSettings();
 
-    scene = new QGraphicsScene();
-    connect(ui->comboBox,SIGNAL(activated(const QString&)),
-            this,SLOT(switchDevice(const QString&)));
+    scene1 = new QGraphicsScene();
+    scene2 = new QGraphicsScene();
+    counter = 1;
 
+    connect(ui->comboBox,SIGNAL(activated(const QString&)),
+            this,SLOT(switchDevice1(const QString&)));
+
+    connect(ui->comboBox_2,SIGNAL(activated(const QString&)),
+            this,SLOT(switchDevice2(const QString&)));
 
     connect(ui->checkBox, SIGNAL(clicked(bool)), this, SLOT(switchGPU(bool)));
     connect(ui->checkBox_2, SIGNAL(clicked(bool)), this, SLOT(switchCPU(bool)));
-
-    if (isSenzorSelected(ui->comboBox))
-    {
-        image = executeTheScanner(scanner);
-        if (image != NULL)
-        {
-            drawTheImageFromTheScanner(image,ui->graphicsView,scene);
-        }
-    }
-    else
-    {
-        QString imageFile = readImageFromComputer();
-        ui->graphicsView->setScene(scene);
-    }
 }
 
 Manual::~Manual()
 {
     delete ui;
     delete scanner;
-    delete image;
-    delete scene;
+    delete image1;
+    delete image2;
+    delete scene1;
+    delete scene2;
 }
 
 void Manual::createListForPreProcessing(){
@@ -130,17 +123,29 @@ void Manual::drawTheImageFromTheScanner(unsigned char *image,QGraphicsView *grap
     graphicsView->setScene(scene);
 }
 
-void Manual::switchDevice(QString name){
+void Manual::switchDevice1(QString name){
     if (name == "Senzor")
     {
-        unsigned char *buffer;
-        buffer = executeTheScanner(scanner);
-        drawTheImageFromTheScanner(buffer,ui->graphicsView,scene);
+        image1 = executeTheScanner(scanner);
+        drawTheImageFromTheScanner(image1,ui->graphicsView,scene1);
     }
     else
     {
         QString imageFile = readImageFromComputer();
-        drawImageFromTheComputer(imageFile,ui->graphicsView,scene);
+        drawImageFromTheComputer(imageFile,ui->graphicsView,scene1);
+    }
+}
+
+void Manual::switchDevice2(QString name){
+    if (name == "Senzor")
+    {
+        image2 = executeTheScanner(scanner);
+        drawTheImageFromTheScanner(image2,ui->graphicsView_3,scene2);
+    }
+    else
+    {
+         QString imageFile = readImageFromComputer();
+         drawImageFromTheComputer(imageFile,ui->graphicsView_3,scene2);
     }
 }
 

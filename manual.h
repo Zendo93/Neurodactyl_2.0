@@ -19,15 +19,19 @@ public:
     ~Manual();
 
 public slots:
-    void switchDevice(QString name);
+    void switchDevice1(QString name);
+    void switchDevice2(QString name);
     void switchGPU(bool checked);
     void switchCPU(bool checked);
 
 private:
     Ui::Manual *ui;
     FingerPrintScanner *scanner;
-    unsigned char *image;
-    QGraphicsScene* scene;
+    unsigned char *image1;
+    unsigned char *image2;
+    QGraphicsScene* scene1;
+    QGraphicsScene* scene2;
+    int counter;
     bool isSenzorSelected(QComboBox *comboBox);
     unsigned char *executeTheScanner(FingerPrintScanner *scanner);
     void drawTheImageFromTheScanner(unsigned char *image, QGraphicsView *graphicsView, QGraphicsScene* scene);

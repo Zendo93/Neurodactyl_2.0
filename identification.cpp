@@ -28,20 +28,6 @@ Identification::Identification(QWidget *parent) :
     scene = new QGraphicsScene();
     connect(ui->comboBox,SIGNAL(activated(const QString&)),
             this,SLOT(switchDevice(const QString&)));
-
-    if (isSenzorSelected(ui->comboBox))
-    {
-        image = executeTheScanner(scanner);
-        if (image != NULL)
-        {
-            drawTheImageFromTheScanner(image,ui->graphicsView_2,scene);
-        }
-    }
-    else
-    {
-        QString imageFile = readImageFromComputer();
-        ui->graphicsView_2->setScene(scene);
-    }
 }
 
 Identification::~Identification()
@@ -85,9 +71,8 @@ void Identification::drawTheImageFromTheScanner(unsigned char *image,QGraphicsVi
 void Identification::switchDevice(QString name){
     if (name == "Senzor")
     {
-        unsigned char *buffer;
-        buffer = executeTheScanner(scanner);
-        drawTheImageFromTheScanner(buffer,ui->graphicsView_2,scene);
+        image = executeTheScanner(scanner);
+        drawTheImageFromTheScanner(image,ui->graphicsView_2,scene);
     }
     else
     {

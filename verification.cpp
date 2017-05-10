@@ -2,6 +2,7 @@
 #include "ui_verification.h"
 #include <QPushButton>
 #include <QFileDialog>
+#include <QGraphicsView>
 
 Verification::Verification(QWidget *parent) :
     QWidget(parent),
@@ -19,34 +20,34 @@ Verification::Verification(QWidget *parent) :
     ui->gridLayout->addWidget(button,1,0,1,1,Qt::AlignCenter);
     ui->gridLayout->addWidget(label2,2,0,1,1,Qt::AlignCenter);
 
+    scene1 = new QGraphicsScene();
+    scene2 = new QGraphicsScene();
 
-    connect(ui->comboBox_2,SIGNAL(currentIndexChanged(const QString&)),
+    connect(ui->comboBox_2,SIGNAL(activated(const QString&)),
             this,SLOT(switchDevice1(const QString&)));
-    connect(ui->comboBox,SIGNAL(currentIndexChanged(const QString&)),
+    connect(ui->comboBox,SIGNAL(activated(const QString&)),
             this,SLOT(switchDevice2(const QString&)));
 
     if (isSenzorSelected(ui->comboBox))
     {
         image1 = executeTheScanner(scanner);
-        drawTheImageFromTheScanner(image1,ui->graphicsView);
+        drawTheImageFromTheScanner(image1,ui->graphicsView,scene1);
     }
     else
     {
-        QGraphicsScene* scene = new QGraphicsScene();
         QString imageFile = readImageFromComputer();
-        ui->graphicsView->setScene(scene);
+        ui->graphicsView->setScene(scene1);
     }
 
     if (isSenzorSelected(ui->comboBox_2))
     {
         image2 = executeTheScanner(scanner);
-        drawTheImageFromTheScanner(image2,ui->graphicsView_2);
+        drawTheImageFromTheScanner(image2,ui->graphicsView_2,scene2);
     }
     else
     {
-        QGraphicsScene* scene = new QGraphicsScene();
         QString imageFile = readImageFromComputer();
-        ui->graphicsView_2->setScene(scene);
+        ui->graphicsView_2->setScene(scene2);
     }
     //layout->addWidget(checkBox3,2,0,2,2,Qt::AlignTop);
 }
@@ -54,6 +55,11 @@ Verification::Verification(QWidget *parent) :
 Verification::~Verification()
 {
     delete ui;
+    delete image1;
+    delete image2;
+    delete scene1;
+    delete scene2;
+    delete scanner;
 }
 
 bool Verification::isSenzorSelected(QComboBox *comboBox){
@@ -80,8 +86,7 @@ unsigned char *Verification::executeTheScanner(FingerPrintScanner *scanner){
     return buffer;
 }
 
-void Verification::drawTheImageFromTheScanner(unsigned char *image,QGraphicsView *graphicsView){
-    QGraphicsScene* scene = new QGraphicsScene();
+void Verification::drawTheImageFromTheScanner(unsigned char *image,QGraphicsView *graphicsView,QGraphicsScene* scene){
     QImage Img(image, 500, 500, QImage::Format_Grayscale8);
     QPixmap item = QPixmap::fromImage(Img);
     scene->addPixmap(item);
@@ -93,12 +98,12 @@ void Verification::switchDevice1(QString name){
     {
         unsigned char *buffer;
         buffer = executeTheScanner(scanner);
-        drawTheImageFromTheScanner(buffer,ui->graphicsView_2);
+        drawTheImageFromTheScanner(buffer,ui->graphicsView_2,scene2);
     }
     else
     {
          QString imageFile = readImageFromComputer();
-         drawImageFromTheComputer(imageFile,ui->graphicsView_2);
+         drawImageFromTheComputer(imageFile,ui->graphicsView_2,scene2);
     }
 }
 
@@ -108,12 +113,12 @@ void Verification::switchDevice2(QString name){
     {
         unsigned char *buffer;
         buffer = executeTheScanner(scanner);
-        drawTheImageFromTheScanner(buffer,ui->graphicsView);
+        drawTheImageFromTheScanner(buffer,ui->graphicsView,scene1);
     }
     else
     {
          QString imageFile = readImageFromComputer();
-         drawImageFromTheComputer(imageFile,ui->graphicsView);
+         drawImageFromTheComputer(imageFile,ui->graphicsView,scene1);
     }
 }
 
@@ -121,14 +126,11 @@ QString Verification::readImageFromComputer(){
     QString imageFile;
     imageFile = QFileDialog::getOpenFileName(this,
                                              tr("Open Image"), "",
-                                             tr("(*.tif);(*.jpg);(*.png);All Files (*)"));
+                                             tr("(*.png *.jpg *.bmp *.tif);;All files (*.*)"));
     return imageFile;
 }
 
-void Verification::drawImageFromTheComputer(QString imageFile,QGraphicsView *graphicsView){
-    QGraphicsScene* scene = new QGraphicsScene();
-    /*QImage image;
-    image.load(imageFile);*/
+void Verification::drawImageFromTheComputer(QString imageFile,QGraphicsView *graphicsView,QGraphicsScene* scene){
     QPixmap image(imageFile);
     scene->addPixmap(image);
     graphicsView->setScene(scene);

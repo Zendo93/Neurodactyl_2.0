@@ -2,6 +2,8 @@
 #define IDENTIFICATION_H
 
 #include <QWidget>
+#include <QComboBox>
+#include <QGraphicsView>
 #include "FingerPrintScanner/fingerprintscanner.h"
 
 namespace Ui {
@@ -22,9 +24,12 @@ private:
     Ui::Identification *ui;
     FingerPrintScanner *scanner;
     unsigned char *image;
-    bool isSenzorSelected();
+    QGraphicsScene* scene;
+    bool isSenzorSelected(QComboBox *comboBox);
     unsigned char *executeTheScanner(FingerPrintScanner *scanner);
-    void drawTheImageFromTheScanner(unsigned char *image,Ui::Identification *ui);
+    void drawTheImageFromTheScanner(unsigned char *image, QGraphicsView *graphicsView, QGraphicsScene* scene);
+    void drawImageFromTheComputer(QString imageFile,QGraphicsView *graphicsView, QGraphicsScene* scene);
+    QString readImageFromComputer();
 };
 
 #endif // IDENTIFICATION_H

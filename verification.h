@@ -27,10 +27,12 @@ private:
     FingerPrintScanner *scanner;
     unsigned char *image1;
     unsigned char *image2;
+    QGraphicsScene* scene1;
+    QGraphicsScene* scene2;
     bool isSenzorSelected(QComboBox *comboBox);
     unsigned char *executeTheScanner(FingerPrintScanner *scanner);
-    void drawTheImageFromTheScanner(unsigned char *image, QGraphicsView *graphicsView);
-    void drawImageFromTheComputer(QString imageFile,QGraphicsView *graphicsView);
+    void drawTheImageFromTheScanner(unsigned char *image, QGraphicsView *graphicsView,QGraphicsScene* scene);
+    void drawImageFromTheComputer(QString imageFile,QGraphicsView *graphicsView,QGraphicsScene* scene);
     QString readImageFromComputer();
 };
 

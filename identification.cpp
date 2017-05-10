@@ -1,7 +1,7 @@
 #include "identification.h"
 #include "ui_identification.h"
 #include <QCheckBox>
-
+#include <QFileDialog>
 #include "./FingerPrintScanner/fingerprintscanner.h"
 #include "./FingerPrintScanner/fxISOdll.h"
 #include "./FingerPrintScanner/fxISOenrdlg.h"
@@ -25,23 +25,35 @@ Identification::Identification(QWidget *parent) :
     layout->addWidget(checkBox2,1,0,1,1,Qt::AlignTop);
     layout->addWidget(checkBox3,2,0,2,2,Qt::AlignTop);
 
-    connect(ui->comboBox,SIGNAL(currentIndexChanged(const QString&)),
+    scene = new QGraphicsScene();
+    connect(ui->comboBox,SIGNAL(activated(const QString&)),
             this,SLOT(switchDevice(const QString&)));
 
-    if (isSenzorSelected())
+    if (isSenzorSelected(ui->comboBox))
     {
         image = executeTheScanner(scanner);
-        drawTheImageFromTheScanner(image,ui);
+        if (image != NULL)
+        {
+            drawTheImageFromTheScanner(image,ui->graphicsView_2,scene);
+        }
+    }
+    else
+    {
+        QString imageFile = readImageFromComputer();
+        ui->graphicsView_2->setScene(scene);
     }
 }
 
 Identification::~Identification()
 {
     delete ui;
+    delete scanner;
+    delete image;
+    delete scene;
 }
 
-bool Identification::isSenzorSelected(){
-    if (ui->comboBox->itemText(ui->comboBox->currentIndex()) == "Senzor")
+bool Identification::isSenzorSelected(QComboBox *comboBox){
+    if (comboBox->itemText(ui->comboBox->currentIndex()) == "Senzor")
     {
         return true;
     }
@@ -49,7 +61,6 @@ bool Identification::isSenzorSelected(){
     {
         return false;
     }
-
 }
 
 unsigned char *Identification::executeTheScanner(FingerPrintScanner *scanner){
@@ -64,13 +75,11 @@ unsigned char *Identification::executeTheScanner(FingerPrintScanner *scanner){
     return buffer;
 }
 
-void Identification::drawTheImageFromTheScanner(unsigned char *image,Ui::Identification *ui){
-    QGraphicsScene* scene = new QGraphicsScene();
+void Identification::drawTheImageFromTheScanner(unsigned char *image,QGraphicsView *graphicsView, QGraphicsScene* scene){
     QImage Img(image, 500, 500, QImage::Format_Grayscale8);
     QPixmap item = QPixmap::fromImage(Img);
     scene->addPixmap(item);
-    ui->graphicsView_2->setScene(scene);
-    //delete scene;
+    graphicsView->setScene(scene);
 }
 
 void Identification::switchDevice(QString name){
@@ -78,12 +87,25 @@ void Identification::switchDevice(QString name){
     {
         unsigned char *buffer;
         buffer = executeTheScanner(scanner);
-        drawTheImageFromTheScanner(buffer,ui);
+        drawTheImageFromTheScanner(buffer,ui->graphicsView_2,scene);
     }
     else
     {
-         QGraphicsScene* scene = new QGraphicsScene();
-         ui->graphicsView_2->setScene(scene);
+        QString imageFile = readImageFromComputer();
+        drawImageFromTheComputer(imageFile,ui->graphicsView_2,scene);
     }
 }
 
+QString Identification::readImageFromComputer(){
+    QString imageFile;
+    imageFile = QFileDialog::getOpenFileName(this,
+                                             tr("Open Image"), "",
+                                             tr("(*.png *.jpg *.bmp *.tif);;All files (*.*)"));
+    return imageFile;
+}
+
+void Identification::drawImageFromTheComputer(QString imageFile,QGraphicsView *graphicsView,QGraphicsScene* scene){
+    QPixmap image(imageFile);
+    scene->addPixmap(image);
+    graphicsView->setScene(scene);
+}
